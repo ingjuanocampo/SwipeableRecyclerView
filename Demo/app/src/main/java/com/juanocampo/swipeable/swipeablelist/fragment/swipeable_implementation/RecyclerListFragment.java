@@ -1,22 +1,23 @@
-package com.juanocampo.swipeable.swipeablelist;
+package com.juanocampo.swipeable.swipeablelist.fragment.swipeable_implementation;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.juanocampo.swipeable.swipeablelist.swpeable_adapter.SwipeableHelperAdapter;
+import com.juanocampo.swipeable.swipeablelist.swpeable.adapter.SwipeableHelperAdapter;
+import com.juanocampo.swipeable.swipeablelist.swpeable.fragment.SwipeableFragment;
 
 /**
- * @author Paul Burke (ipaulpro)
+ * @author juan.ocampo
  */
-public class RecyclerListFragment extends Fragment implements RecyclerListAdapter.SwipeAdapterActions {
+public class RecyclerListFragment extends SwipeableFragment implements SwipeableHelperAdapter.SwipeAdapterActions {
 
-    SwipeableHelperAdapter adapter;
+    private SwipeableHelperAdapter adapter;
 
     public RecyclerListFragment() {
     }
@@ -31,7 +32,6 @@ public class RecyclerListFragment extends Fragment implements RecyclerListAdapte
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         RecyclerView recyclerView = (RecyclerView) view;
         adapter = new RecyclerListAdapter(getActivity(), this, recyclerView);
 
@@ -40,13 +40,9 @@ public class RecyclerListFragment extends Fragment implements RecyclerListAdapte
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
+    @NonNull
     @Override
-    public void swiped(int position) {
-
-        getFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-                .replace(R.id.content, new BlankFragment(), "tag")
-                .addToBackStack("tag")
-                .commitAllowingStateLoss();
+    protected SwipeableHelperAdapter getSwipeableAdapter() {
+        return adapter;
     }
 }

@@ -1,4 +1,4 @@
-package com.juanocampo.swipeable.swipeablelist.swpeable_adapter;
+package com.juanocampo.swipeable.swipeablelist.swpeable.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -7,6 +7,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.juanocampo.swipeable.swipeablelist.R;
+import com.juanocampo.swipeable.swipeablelist.swpeable.SwipeableHelperCallback;
+import com.juanocampo.swipeable.swipeablelist.swpeable.viewholder.SwipeableViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,7 @@ public abstract class SwipeableHelperAdapter extends RecyclerView.Adapter {
 
 
     public SwipeableHelperAdapter(SwipeAdapterActions listener, RecyclerView recyclerView) {
-        callback = new SwipeableHelperCallback(this);
+        callback = new SwipeableHelperCallback(this, recyclerView);
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
         this.listener = listener;
@@ -40,16 +42,6 @@ public abstract class SwipeableHelperAdapter extends RecyclerView.Adapter {
         swipeableViewHolders.add(itemViewHolder);
         return itemViewHolder;
     }
-
-    @Override
-    public final void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        onBindSwipeViewHolder(holder, position);
-        if (position == callback.getLastSelectedPosition()) {
-            restoreSwipedItem();
-        }
-    }
-
-    protected abstract void onBindSwipeViewHolder(RecyclerView.ViewHolder holder, int position);
 
     /**
      * @param parent
@@ -78,15 +70,19 @@ public abstract class SwipeableHelperAdapter extends RecyclerView.Adapter {
         listener.swiped(position);
     }
 
-    private void restoreSwipedItem() {
-        final RecyclerView.ViewHolder viewHolder = swipeableViewHolders.get(callback.getLastSelectedPosition());
+    public void restoreSwipedItem(int restorePosition) {
 
-        if (viewHolder != null && viewHolder instanceof SwipeableViewHolder) {
-            SwipeableViewHolder swipeableViewHolder = (SwipeableViewHolder) viewHolder;
+        if (swipeableViewHolders != null && !swipeableViewHolders.isEmpty() && restorePosition < swipeableViewHolders.size()) {
+            final RecyclerView.ViewHolder viewHolder = swipeableViewHolders.get(restorePosition);
 
-            Animation animation = AnimationUtils.loadAnimation(viewHolder.itemView.getContext(), R.anim.slide_back_swipeable_card);
-            swipeableViewHolder.swipeableMainContainer.startAnimation(animation);
-            callback.clearCached();
+            callback.clearSwipedValues();
+
+            if (viewHolder != null && viewHolder instanceof SwipeableViewHolder) {
+                SwipeableViewHolder swipeableViewHolder = (SwipeableViewHolder) viewHolder;
+
+                Animation animation = AnimationUtils.loadAnimation(viewHolder.itemView.getContext(), R.anim.slide_back_swipeable_card);
+                swipeableViewHolder.swipeableMainContainer.startAnimation(animation);
+            }
         }
     }
 }

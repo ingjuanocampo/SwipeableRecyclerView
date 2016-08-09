@@ -1,10 +1,12 @@
-package com.juanocampo.swipeable.swipeablelist.swpeable_adapter;
+package com.juanocampo.swipeable.swipeablelist.swpeable;
 
 import android.graphics.Canvas;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+
+import com.juanocampo.swipeable.swipeablelist.swpeable.adapter.SwipeableHelperAdapter;
+import com.juanocampo.swipeable.swipeablelist.swpeable.viewholder.SwipeableViewHolder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +17,8 @@ import java.util.Map;
 
 public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
 
-    private static final int NO_POSITION_CACHED = -1;
 
+    private final RecyclerView recycler;
     private boolean isSwiped;
     private Map<RecyclerView.ViewHolder, Integer> viewHolderDxMap;
     private float currentDxTranslation;
@@ -24,14 +26,12 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
     private final SwipeableHelperAdapter adapter;
 
 
-    private static int lastSelectedPosition = NO_POSITION_CACHED;
 
-    public SwipeableHelperCallback(SwipeableHelperAdapter adapter) {
+    public SwipeableHelperCallback(SwipeableHelperAdapter adapter, RecyclerView recyclerView) {
         this.adapter = adapter;
         this.viewHolderDxMap = new HashMap<>();
+        this.recycler = recyclerView;
     }
-
-
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
@@ -49,8 +49,8 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
 
         if (!isSwiped && viewHolder instanceof SwipeableViewHolder) {
             isSwiped = true;
-            lastSelectedPosition = lastSelectedViewHolder.getAdapterPosition();
-            adapter.onItemDismiss(lastSelectedPosition);
+            adapter.onItemDismiss(lastSelectedViewHolder.getAdapterPosition());
+
         }
     }
 
@@ -73,9 +73,11 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
     }
 
     private void makeParallaxAnimation(float dX, RecyclerView.ViewHolder viewHolderDragging) {
-        for (RecyclerView.ViewHolder viewHolderAnimate : adapter.getSwipeableViewHolders()) {
-            if (viewHolderAnimate != null && viewHolderAnimate != viewHolderDragging) {
-                viewHolderAnimate.itemView.setTranslationX(dX/10);
+        if (dX < 0) {
+            for (RecyclerView.ViewHolder viewHolderAnimate : adapter.getSwipeableViewHolders()) {
+                if (viewHolderAnimate != null && viewHolderAnimate != viewHolderDragging) {
+                    viewHolderAnimate.itemView.setTranslationX(dX/10);
+                }
             }
         }
     }
@@ -88,8 +90,7 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
             if (lastSelectedViewHolder instanceof SwipeableViewHolder && !isSwiped) {
                 // Let the view holder know that this item is being moved or dragged
                 isSwiped = true;
-                lastSelectedPosition = lastSelectedViewHolder.getAdapterPosition();
-                adapter.onItemDismiss(lastSelectedPosition);
+                adapter.onItemDismiss(lastSelectedViewHolder.getAdapterPosition());
             }
         }
         this.lastSelectedViewHolder = viewHolder;
@@ -107,14 +108,11 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
         return viewHolderDxMap.containsKey(lastViewHolder) ? Math.abs(viewHolderDxMap.get(lastViewHolder) - newDx) < 350 : true;
     }
 
+    public void clearSwipedValues() {
 
-    public int getLastSelectedPosition() {
-        return lastSelectedPosition;
+
+        this.isSwiped = false;
+        this.viewHolderDxMap = new HashMap<>();
+        this.currentDxTranslation = 0;
     }
-
-    public void clearCached() {
-        lastSelectedPosition = NO_POSITION_CACHED;
-    }
-
-
 }

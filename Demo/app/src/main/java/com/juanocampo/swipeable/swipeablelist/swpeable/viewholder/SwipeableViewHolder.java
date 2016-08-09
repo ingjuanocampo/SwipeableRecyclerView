@@ -1,4 +1,4 @@
-package com.juanocampo.swipeable.swipeablelist.swpeable_adapter;
+package com.juanocampo.swipeable.swipeablelist.swpeable.viewholder;
 
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;

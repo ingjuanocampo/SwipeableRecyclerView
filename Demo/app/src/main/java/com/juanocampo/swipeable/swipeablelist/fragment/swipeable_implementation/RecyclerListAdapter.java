@@ -1,4 +1,4 @@
-package com.juanocampo.swipeable.swipeablelist;
+package com.juanocampo.swipeable.swipeablelist.fragment.swipeable_implementation;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,8 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.juanocampo.swipeable.swipeablelist.swpeable_adapter.SwipeableHelperAdapter;
-import com.juanocampo.swipeable.swipeablelist.swpeable_adapter.SwipeableViewHolder;
+import com.juanocampo.swipeable.swipeablelist.R;
+import com.juanocampo.swipeable.swipeablelist.swpeable.adapter.SwipeableHelperAdapter;
+import com.juanocampo.swipeable.swipeablelist.swpeable.viewholder.SwipeableViewHolder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +39,14 @@ public class RecyclerListAdapter extends SwipeableHelperAdapter {
     }
 
     @Override
-    public void onBindSwipeViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    protected RecyclerView.ViewHolder onCreateSwipeViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_main, parent, false);
+        RecyclerView.ViewHolder itemViewHolder = viewType == IMPAR ? new SwipeableItemViewHolder(parent) : new ItemViewHolder(view);
+        return itemViewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
 
         if (viewType == PAR) {
@@ -60,13 +68,6 @@ public class RecyclerListAdapter extends SwipeableHelperAdapter {
     @Override
     public int getItemCount() {
         return mItems.size();
-    }
-
-    @Override
-    protected RecyclerView.ViewHolder onCreateSwipeViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_main, parent, false);
-        RecyclerView.ViewHolder itemViewHolder = viewType == IMPAR ? new SwipeableItemViewHolder(parent) : new ItemViewHolder(view);
-        return itemViewHolder;
     }
 
     /**
