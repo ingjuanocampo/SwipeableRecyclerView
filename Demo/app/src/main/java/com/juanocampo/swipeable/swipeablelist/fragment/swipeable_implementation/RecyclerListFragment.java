@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.juanocampo.swipeable.swipeablelist.R;
 import com.juanocampo.swipeable.swipeablelist.swpeable.adapter.SwipeableHelperAdapter;
 import com.juanocampo.swipeable.swipeablelist.swpeable.fragment.SwipeableFragment;
 
@@ -25,20 +26,29 @@ public class RecyclerListFragment extends SwipeableFragment implements Swipeable
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return new RecyclerView(container.getContext());
+        return inflater.inflate(R.layout.recycler_view, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView recyclerView = (RecyclerView) view;
-        adapter = new RecyclerListAdapter(getActivity(), this, recyclerView);
+        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
+        /*if (adapter == null) {
+            adapter = new RecyclerListAdapter(getActivity(), this, recyclerView);
+        } else {
+            adapter.attachToRecycler(recyclerView);
+        }*/
 
+        LinearLayoutManager manager = new LinearLayoutManager(getActivity());
+
+        adapter = new RecyclerListAdapter(getActivity(), this, recyclerView, manager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(manager);
+
     }
+
 
     @NonNull
     @Override

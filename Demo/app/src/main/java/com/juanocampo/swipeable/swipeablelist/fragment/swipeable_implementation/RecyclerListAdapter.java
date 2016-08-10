@@ -1,7 +1,9 @@
 package com.juanocampo.swipeable.swipeablelist.fragment.swipeable_implementation;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.juanocampo.swipeable.swipeablelist.R;
+import com.juanocampo.swipeable.swipeablelist.swpeable.SwipeableHelperCallback;
 import com.juanocampo.swipeable.swipeablelist.swpeable.adapter.SwipeableHelperAdapter;
 import com.juanocampo.swipeable.swipeablelist.swpeable.viewholder.SwipeableViewHolder;
 
@@ -33,8 +36,8 @@ public class RecyclerListAdapter extends SwipeableHelperAdapter {
 
     private int IMPAR = 2;
 
-    public RecyclerListAdapter(Context context, SwipeAdapterActions listener, RecyclerView recyclerView) {
-        super(listener, recyclerView);
+    public RecyclerListAdapter(Context context, SwipeAdapterActions listener, RecyclerView recyclerView,LinearLayoutManager manager) {
+        super(listener, recyclerView, manager);
         mItems.addAll(Arrays.asList(context.getResources().getStringArray(R.array.dummy_items)));
     }
 

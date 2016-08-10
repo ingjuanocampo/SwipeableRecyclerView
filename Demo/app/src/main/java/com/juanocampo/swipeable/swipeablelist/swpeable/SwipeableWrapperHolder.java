@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,7 @@ public abstract class SwipeableWrapperHolder extends Fragment implements Swipeab
 
         fragmentSwipeable.onAttachSwipeListener(this);
 
-        getFragmentManager().beginTransaction().add(R.id.swipeable_container, fragmentSwipeable)
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.swipeable_container, fragmentSwipeable)
                             .commitAllowingStateLoss();
     }
 
@@ -47,11 +48,11 @@ public abstract class SwipeableWrapperHolder extends Fragment implements Swipeab
     public void swiped(int position) {
         lastSelectedPosition = position;
         Fragment fragmentNext = getSwipeableNextFragment();
-        getFragmentManager().beginTransaction()
+        getActivity().getSupportFragmentManager().beginTransaction()
                             .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                             .replace(R.id.swipeable_container, fragmentNext)
                             .addToBackStack(fragmentNext.getClass().getSimpleName())
-                            .commit();
+                            .commitAllowingStateLoss();
     }
 
     @Override
@@ -62,6 +63,8 @@ public abstract class SwipeableWrapperHolder extends Fragment implements Swipeab
             getView().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+
+
                     fragmentSwipeable.getAdapter().restoreSwipedItem(lastSelectedPosition);
                     lastSelectedPosition = NO_POSITION_CACHED;
                 }

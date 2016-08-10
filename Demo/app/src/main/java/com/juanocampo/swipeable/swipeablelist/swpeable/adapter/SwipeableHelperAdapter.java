@@ -1,5 +1,6 @@
 package com.juanocampo.swipeable.swipeablelist.swpeable.adapter;
 
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import java.util.List;
 
 public abstract class SwipeableHelperAdapter extends RecyclerView.Adapter {
 
+
     public interface SwipeAdapterActions {
         void swiped(int position);
     }
@@ -26,15 +28,23 @@ public abstract class SwipeableHelperAdapter extends RecyclerView.Adapter {
     private final SwipeableHelperCallback callback;
     private SwipeAdapterActions listener;
     private List<RecyclerView.ViewHolder> swipeableViewHolders;
+    private final LinearLayoutManager manager;
 
 
-    public SwipeableHelperAdapter(SwipeAdapterActions listener, RecyclerView recyclerView) {
+    public SwipeableHelperAdapter(SwipeAdapterActions listener, RecyclerView recyclerView, LinearLayoutManager manager) {
         callback = new SwipeableHelperCallback(this, recyclerView);
-        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(recyclerView);
         this.listener = listener;
         this.swipeableViewHolders = new ArrayList<>();
+        this.manager = manager;
+        attachToRecycler(recyclerView);
     }
+
+    public void attachToRecycler(RecyclerView recyclerView) {
+        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+
 
     @Override
     public final RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -67,7 +77,8 @@ public abstract class SwipeableHelperAdapter extends RecyclerView.Adapter {
      * @see RecyclerView.ViewHolder#getAdapterPosition()
      */
     public void onItemDismiss(int position) {
-        listener.swiped(position);
+        int visiblePositionSelected = position - manager.findFirstVisibleItemPosition();
+        listener.swiped(visiblePositionSelected);
     }
 
     public void restoreSwipedItem(int restorePosition) {

@@ -19,21 +19,12 @@ public abstract class SwipeableFragment extends Fragment implements RecyclerList
     }
 
     private SwipeFragmentAction listener;
-    private SwipeableHelperAdapter adapter;
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        adapter = getSwipeableAdapter();
-        if (adapter == null) {
-            throw new NullPointerException("Swipeable adapter MUST not be null");
-        }
-    }
 
     protected abstract @NonNull SwipeableHelperAdapter getSwipeableAdapter();
 
     public SwipeableHelperAdapter getAdapter() {
-        return adapter;
+        return getSwipeableAdapter();
     }
 
     public void onAttachSwipeListener(SwipeFragmentAction listener) {
