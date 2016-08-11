@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.juanocampo.swipeable.swipeablelist.R;
-import com.juanocampo.swipeable.swipeablelist.swpeable.SwipeableHelperCallback;
 import com.juanocampo.swipeable.swipeablelist.swpeable.adapter.SwipeableHelperAdapter;
 import com.juanocampo.swipeable.swipeablelist.swpeable.viewholder.SwipeableViewHolder;
 

@@ -1,6 +1,5 @@
 package com.juanocampo.swipeable.swipeablelist.fragment.swipeable_implementation;
 
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import com.juanocampo.swipeable.swipeablelist.swpeable.SwipeableWrapperHolder;
