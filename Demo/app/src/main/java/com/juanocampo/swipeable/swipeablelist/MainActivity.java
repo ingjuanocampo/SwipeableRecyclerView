@@ -6,8 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.juanocampo.swipeable.swipeablelist.backlistener.OnBackListener;
 import com.juanocampo.swipeable.swipeablelist.fragment.MainFragment;
-import com.juanocampo.swipeable.swipeablelist.fragment.swipeable_implementation.RecyclerListFragment;
-import com.juanocampo.swipeable.swipeablelist.fragment.swipeable_implementation.SwipeableHolder;
+import com.juanocampo.swipeable.swipeablelist.fragment.swipeable_implementation.Holder;
 
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = new SwipeableHolder();
+                fragment = new Holder();
                 break;
         }
 

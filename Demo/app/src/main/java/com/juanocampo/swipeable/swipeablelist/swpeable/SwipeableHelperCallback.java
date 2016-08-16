@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 
-import com.juanocampo.swipeable.swipeablelist.swpeable.adapter.SwipeableHelperAdapter;
+import com.juanocampo.swipeable.swipeablelist.swpeable.adapter.SwipeableAdapter;
 import com.juanocampo.swipeable.swipeablelist.swpeable.viewholder.SwipeableViewHolder;
 
 import java.util.HashMap;
@@ -23,11 +23,11 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
     private Map<RecyclerView.ViewHolder, Integer> viewHolderDxMap;
     private float currentDxTranslation;
     private RecyclerView.ViewHolder lastSelectedViewHolder;
-    private final SwipeableHelperAdapter adapter;
+    private final SwipeableAdapter adapter;
 
 
 
-    public SwipeableHelperCallback(SwipeableHelperAdapter adapter, RecyclerView recyclerView) {
+    public SwipeableHelperCallback(SwipeableAdapter adapter, RecyclerView recyclerView) {
         this.adapter = adapter;
         this.viewHolderDxMap = new HashMap<>();
         this.recycler = recyclerView;

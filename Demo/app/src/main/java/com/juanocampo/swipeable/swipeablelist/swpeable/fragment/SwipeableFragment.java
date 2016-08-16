@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import com.juanocampo.swipeable.swipeablelist.fragment.swipeable_implementation.RecyclerListAdapter;
-import com.juanocampo.swipeable.swipeablelist.swpeable.adapter.SwipeableHelperAdapter;
+import com.juanocampo.swipeable.swipeablelist.swpeable.adapter.SwipeableAdapter;
 
 /**
  * Created by juan.ocampo on 09/08/2016.
@@ -19,9 +19,10 @@ public abstract class SwipeableFragment extends Fragment implements RecyclerList
     private SwipeFragmentAction listener;
 
 
-    protected abstract @NonNull SwipeableHelperAdapter getSwipeableAdapter();
+    protected abstract @NonNull
+    SwipeableAdapter getSwipeableAdapter();
 
-    public SwipeableHelperAdapter getAdapter() {
+    public SwipeableAdapter getAdapter() {
         return getSwipeableAdapter();
     }
 

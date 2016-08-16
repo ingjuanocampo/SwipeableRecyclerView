@@ -15,7 +15,7 @@ import com.juanocampo.swipeable.swipeablelist.swpeable.fragment.SwipeableFragmen
  * Created by juan.ocampo on 09/08/2016.
  */
 
-public abstract class SwipeableWrapperHolder extends Fragment implements SwipeableFragment.SwipeFragmentAction, OnBackListener {
+public abstract class WrapperHolder extends Fragment implements SwipeableFragment.SwipeFragmentAction, OnBackListener {
 
     private static final int NO_POSITION_CACHED = -1;
 

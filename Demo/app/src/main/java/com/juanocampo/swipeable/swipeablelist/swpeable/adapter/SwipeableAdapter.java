@@ -18,7 +18,7 @@ import java.util.List;
  * Created by juan.ocampo on 05/08/2016.
  */
 
-public abstract class SwipeableHelperAdapter extends RecyclerView.Adapter {
+public abstract class SwipeableAdapter extends RecyclerView.Adapter {
 
 
     public interface SwipeAdapterActions {
@@ -30,21 +30,14 @@ public abstract class SwipeableHelperAdapter extends RecyclerView.Adapter {
     private List<RecyclerView.ViewHolder> swipeableViewHolders;
     private final LinearLayoutManager manager;
 
-
-    public SwipeableHelperAdapter(SwipeAdapterActions listener, RecyclerView recyclerView, LinearLayoutManager manager) {
+    public SwipeableAdapter(SwipeAdapterActions listener, RecyclerView recyclerView, LinearLayoutManager manager) {
         callback = new SwipeableHelperCallback(this, recyclerView);
         this.listener = listener;
         this.swipeableViewHolders = new ArrayList<>();
         this.manager = manager;
-        attachToRecycler(recyclerView);
-    }
-
-    public void attachToRecycler(RecyclerView recyclerView) {
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
     }
-
-
 
     @Override
     public final RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

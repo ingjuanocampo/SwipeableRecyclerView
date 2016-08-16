@@ -3,7 +3,6 @@ package com.juanocampo.swipeable.swipeablelist.fragment.swipeable_implementation
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.juanocampo.swipeable.swipeablelist.R;
-import com.juanocampo.swipeable.swipeablelist.swpeable.adapter.SwipeableHelperAdapter;
+import com.juanocampo.swipeable.swipeablelist.swpeable.adapter.SwipeableAdapter;
 import com.juanocampo.swipeable.swipeablelist.swpeable.viewholder.SwipeableViewHolder;
 
 import java.util.ArrayList;
@@ -19,12 +18,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Simple RecyclerView.Adapter that implements {@link SwipeableHelperAdapter} to respond to move and
+ * Simple RecyclerView.Adapter that implements {@link SwipeableAdapter} to respond to move and
  * dismiss events from a {@link android.support.v7.widget.helper.ItemTouchHelper}.
  *
  * @author @juanocampo
  */
-public class RecyclerListAdapter extends SwipeableHelperAdapter {
+public class RecyclerListAdapter extends SwipeableAdapter {
 
 
 

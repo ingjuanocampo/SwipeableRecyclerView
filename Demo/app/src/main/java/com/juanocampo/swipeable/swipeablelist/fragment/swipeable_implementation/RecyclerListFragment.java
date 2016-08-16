@@ -10,15 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.juanocampo.swipeable.swipeablelist.R;
-import com.juanocampo.swipeable.swipeablelist.swpeable.adapter.SwipeableHelperAdapter;
+import com.juanocampo.swipeable.swipeablelist.swpeable.adapter.SwipeableAdapter;
 import com.juanocampo.swipeable.swipeablelist.swpeable.fragment.SwipeableFragment;
 
 /**
  * @author juan.ocampo
  */
-public class RecyclerListFragment extends SwipeableFragment implements SwipeableHelperAdapter.SwipeAdapterActions {
+public class RecyclerListFragment extends SwipeableFragment implements SwipeableAdapter.SwipeAdapterActions {
 
-    private SwipeableHelperAdapter adapter;
+    private SwipeableAdapter adapter;
 
     public RecyclerListFragment() {
     }
@@ -52,7 +52,7 @@ public class RecyclerListFragment extends SwipeableFragment implements Swipeable
 
     @NonNull
     @Override
-    protected SwipeableHelperAdapter getSwipeableAdapter() {
+    protected SwipeableAdapter getSwipeableAdapter() {
         return adapter;
     }
 }
