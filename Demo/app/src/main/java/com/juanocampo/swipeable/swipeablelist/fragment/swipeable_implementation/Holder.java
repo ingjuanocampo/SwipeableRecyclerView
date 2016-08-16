@@ -12,12 +12,12 @@ import com.juanocampo.swipeable.swipeablelist.swpeable.fragment.SwipeableFragmen
 public class Holder extends WrapperHolder {
 
     @Override
-    protected SwipeableFragment getSwipeableMainFragment() {
+    protected Fragment getSwipeableMainFragment() {
         return new RecyclerListFragment();
     }
 
     @Override
-    protected Fragment getSwipeableNextFragment() {
+    protected Fragment getSwipeableNextFragment(int lastSelectedPosition) {
         return new BlankFragment();
     }
 }

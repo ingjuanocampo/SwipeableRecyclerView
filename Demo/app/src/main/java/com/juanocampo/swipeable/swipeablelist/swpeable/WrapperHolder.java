@@ -9,18 +9,19 @@ import android.view.ViewGroup;
 
 import com.juanocampo.swipeable.swipeablelist.R;
 import com.juanocampo.swipeable.swipeablelist.backlistener.OnBackListener;
+import com.juanocampo.swipeable.swipeablelist.fragment.swipeable_implementation.RecyclerListAdapter;
+import com.juanocampo.swipeable.swipeablelist.swpeable.adapter.SwipeableAdapter;
 import com.juanocampo.swipeable.swipeablelist.swpeable.fragment.SwipeableFragment;
 
 /**
  * Created by juan.ocampo on 09/08/2016.
  */
 
-public abstract class WrapperHolder extends Fragment implements SwipeableFragment.SwipeFragmentAction, OnBackListener {
+public abstract class WrapperHolder extends Fragment implements RecyclerListAdapter.SwipeAdapterActions,  OnBackListener {
 
     private static final int NO_POSITION_CACHED = -1;
 
     private int lastSelectedPosition = NO_POSITION_CACHED;
-    private SwipeableFragment fragmentSwipeable;
     private Fragment fragmentNext;
 
     @Override
@@ -31,23 +32,23 @@ public abstract class WrapperHolder extends Fragment implements SwipeableFragmen
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        fragmentSwipeable = getSwipeableMainFragment();
+        if (!(getSwipeableMainFragment() instanceof SwipeableFragment)) {
+            throw new ClassCastException("The main child fragment MUST implement SwipeableFragment");
+        }
 
-        fragmentSwipeable.onAttachSwipeListener(this);
-
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.swipeable_container, fragmentSwipeable)
+        getChildFragmentManager().beginTransaction().replace(R.id.swipeable_container, getSwipeableMainFragment())
                             .commitAllowingStateLoss();
     }
 
-    protected abstract SwipeableFragment getSwipeableMainFragment();
+    protected abstract Fragment getSwipeableMainFragment();
 
-    protected abstract Fragment getSwipeableNextFragment();
+    protected abstract Fragment getSwipeableNextFragment(int lastSelectedPosition);
 
     @Override
     public void swiped(int position) {
         lastSelectedPosition = position;
-        fragmentNext = getSwipeableNextFragment();
-        getActivity().getSupportFragmentManager().beginTransaction()
+        fragmentNext = getSwipeableNextFragment(lastSelectedPosition);
+        getChildFragmentManager().beginTransaction()
                             .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                             .replace(R.id.swipeable_container, fragmentNext)
                             .addToBackStack(fragmentNext.getClass().getSimpleName())
@@ -59,12 +60,18 @@ public abstract class WrapperHolder extends Fragment implements SwipeableFragmen
         boolean isHandleLocal = false;
 
         if (fragmentNext!= null && fragmentNext.isResumed() && fragmentNext.isVisible()
-                && getFragmentManager().popBackStackImmediate()) {
+                && getChildFragmentManager().popBackStackImmediate()) {
 
             getView().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    fragmentSwipeable.getAdapter().restoreSwipedItem(lastSelectedPosition);
+                    if (getChildFragmentManager().getFragments()!= null && !getChildFragmentManager().getFragments().isEmpty() &&
+                            getChildFragmentManager().getFragments().get(0) instanceof SwipeableFragment) {
+                        SwipeableAdapter adapter = ((SwipeableFragment)getChildFragmentManager().getFragments().get(0)).getSwipeableAdapter();
+                        if (adapter != null) {
+                            adapter.restoreSwipedItem(lastSelectedPosition);
+                        }
+                    }
                     lastSelectedPosition = NO_POSITION_CACHED;
                 }
             }, getResources().getInteger(R.integer.sort_delaytime));

@@ -20,7 +20,6 @@ import java.util.List;
 
 public abstract class SwipeableAdapter extends RecyclerView.Adapter {
 
-
     public interface SwipeAdapterActions {
         void swiped(int position);
     }
@@ -29,9 +28,11 @@ public abstract class SwipeableAdapter extends RecyclerView.Adapter {
     private SwipeAdapterActions listener;
     private List<RecyclerView.ViewHolder> swipeableViewHolders;
     private final LinearLayoutManager manager;
+    private final RecyclerView recycler;
 
     public SwipeableAdapter(SwipeAdapterActions listener, RecyclerView recyclerView, LinearLayoutManager manager) {
         callback = new SwipeableHelperCallback(this, recyclerView);
+        this.recycler = recyclerView;
         this.listener = listener;
         this.swipeableViewHolders = new ArrayList<>();
         this.manager = manager;
@@ -71,15 +72,17 @@ public abstract class SwipeableAdapter extends RecyclerView.Adapter {
      */
     public void onItemDismiss(int position) {
         int visiblePositionSelected = position - manager.findFirstVisibleItemPosition();
-        listener.swiped(visiblePositionSelected);
+        if (listener != null) {
+            listener.swiped(visiblePositionSelected);
+        }
     }
 
     public void restoreSwipedItem(int restorePosition) {
 
+        //recycler.findViewHolderForAdapterPosition(restorePosition);
+
         if (swipeableViewHolders != null && !swipeableViewHolders.isEmpty() && restorePosition < swipeableViewHolders.size()) {
             final RecyclerView.ViewHolder viewHolder = swipeableViewHolders.get(restorePosition);
-
-            callback.clearSwipedValues();
 
             if (viewHolder != null && viewHolder instanceof SwipeableViewHolder) {
                 SwipeableViewHolder swipeableViewHolder = (SwipeableViewHolder) viewHolder;
@@ -88,5 +91,6 @@ public abstract class SwipeableAdapter extends RecyclerView.Adapter {
                 swipeableViewHolder.swipeableMainContainer.startAnimation(animation);
             }
         }
+        callback.clearSwipedValues();
     }
 }
