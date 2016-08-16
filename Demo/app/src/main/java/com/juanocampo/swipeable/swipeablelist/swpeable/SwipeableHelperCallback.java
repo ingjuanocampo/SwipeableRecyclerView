@@ -24,6 +24,7 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
     private float currentDxTranslation;
     private RecyclerView.ViewHolder lastSelectedViewHolder;
     private final SwipeableAdapter adapter;
+    private boolean isDragInLeftDirection;
 
 
 
@@ -35,9 +36,7 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-            final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-            final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-            return makeMovementFlags(dragFlags, swipeFlags);
+            return makeMovementFlags(ItemTouchHelper.LEFT, ItemTouchHelper.LEFT);
     }
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -47,18 +46,17 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
 
-        if (!isSwiped && viewHolder instanceof SwipeableViewHolder) {
+        if (!isSwiped && viewHolder instanceof SwipeableViewHolder && isDragInLeftDirection) {
             isSwiped = true;
             adapter.onItemDismiss(lastSelectedViewHolder.getAdapterPosition());
 
         }
     }
 
-
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
-        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE && viewHolder instanceof SwipeableViewHolder) {
+        this.isDragInLeftDirection = dX < 0;
+        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE && viewHolder instanceof SwipeableViewHolder && isDragInLeftDirection) {
             if (isDxProportionalToTheLastState(viewHolder, (int) dX)) {
                 SwipeableViewHolder swipeableViewHolder = (SwipeableViewHolder) viewHolder;
                 currentDxTranslation = getSwipeXTranslation(dX);
@@ -74,7 +72,8 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
 
     private void makeParallaxAnimation(float dX, RecyclerView.ViewHolder viewHolderDragging) {
         if (dX < 0) {
-            for (RecyclerView.ViewHolder viewHolderAnimate : adapter.getSwipeableViewHolders()) {
+            for (int i = adapter.getManager().findFirstVisibleItemPosition() ; i < adapter.getManager().findLastVisibleItemPosition();  i ++) {
+                RecyclerView.ViewHolder viewHolderAnimate = adapter.getRecycler().findViewHolderForAdapterPosition(i);
                 if (viewHolderAnimate != null && viewHolderAnimate != viewHolderDragging) {
                     viewHolderAnimate.itemView.setTranslationX(dX/10);
                 }
@@ -86,7 +85,7 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         // We only want the active item to change
-        if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
+        if (actionState == ItemTouchHelper.ACTION_STATE_IDLE && isDragInLeftDirection) {
             if (lastSelectedViewHolder instanceof SwipeableViewHolder && !isSwiped) {
                 // Let the view holder know that this item is being moved or dragged
                 isSwiped = true;
@@ -103,14 +102,11 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
         return dX < 0 ? dX/5 : 0;
     }
 
-
     private boolean isDxProportionalToTheLastState(RecyclerView.ViewHolder lastViewHolder, int newDx) {
         return viewHolderDxMap.containsKey(lastViewHolder) ? Math.abs(viewHolderDxMap.get(lastViewHolder) - newDx) < 350 : true;
     }
 
     public void clearSwipedValues() {
-
-
         this.isSwiped = false;
         this.viewHolderDxMap = new HashMap<>();
         this.currentDxTranslation = 0;

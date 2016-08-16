@@ -25,8 +25,6 @@ import java.util.List;
  */
 public class RecyclerListAdapter extends SwipeableAdapter {
 
-
-
     private static final int PAR = 1;
 
 
@@ -40,7 +38,7 @@ public class RecyclerListAdapter extends SwipeableAdapter {
     }
 
     @Override
-    protected RecyclerView.ViewHolder onCreateSwipeViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_main, parent, false);
         RecyclerView.ViewHolder itemViewHolder = viewType == IMPAR ? new SwipeableItemViewHolder(parent) : new ItemViewHolder(view);
         return itemViewHolder;
