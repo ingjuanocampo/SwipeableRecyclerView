@@ -3,7 +3,9 @@ package com.juanocampo.swipeable.swipeablelist.swpeable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -23,6 +25,41 @@ public abstract class WrapperHolder extends Fragment implements RecyclerListAdap
 
     private int lastSelectedPosition = NO_POSITION_CACHED;
     private Fragment fragmentNext;
+    private View mainFragmentContainer;
+    private final static int PARALLAX_VALUE = 10;
+
+    private float downX = 0;
+    private float currentXTranslation;
+
+    private final View.OnTouchListener touchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    downX = event.getX();
+                    Log.e("downX", " "+ downX);
+
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if (downX != 0 && downX < event.getX()) {
+                        downX = 0;
+                        currentXTranslation = 0;
+                        onBackFragmentPressed();
+                        Log.e("event.getX()", " "+ event.getX());
+                    }
+                    break;
+            }
+
+            if (downX != 0 && downX < event.getX()) {
+                Log.e("currentXTranslation", " "+ currentXTranslation);
+                currentXTranslation = event.getX();
+                mainFragmentContainer.setLeft((int) ((currentXTranslation - downX)/ PARALLAX_VALUE));
+            }
+            return true;
+        }
+    };
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -38,6 +75,8 @@ public abstract class WrapperHolder extends Fragment implements RecyclerListAdap
 
         getChildFragmentManager().beginTransaction().replace(R.id.swipeable_container, getSwipeableMainFragment())
                             .commitAllowingStateLoss();
+
+        mainFragmentContainer = getView().findViewById(R.id.swipeable_container);
     }
 
     protected abstract Fragment getSwipeableMainFragment();
@@ -48,6 +87,7 @@ public abstract class WrapperHolder extends Fragment implements RecyclerListAdap
     public void swiped(int position) {
         lastSelectedPosition = position;
         fragmentNext = getSwipeableNextFragment(lastSelectedPosition);
+        mainFragmentContainer.setOnTouchListener(touchListener);
         getChildFragmentManager().beginTransaction()
                             .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                             .replace(R.id.swipeable_container, fragmentNext)
@@ -61,6 +101,7 @@ public abstract class WrapperHolder extends Fragment implements RecyclerListAdap
 
         if (fragmentNext!= null && fragmentNext.isResumed() && fragmentNext.isVisible()
                 && getChildFragmentManager().popBackStackImmediate()) {
+            mainFragmentContainer.setOnTouchListener(null);
 
             getView().postDelayed(new Runnable() {
                 @Override
@@ -72,6 +113,8 @@ public abstract class WrapperHolder extends Fragment implements RecyclerListAdap
                             adapter.restoreSwipedItem(lastSelectedPosition);
                         }
                     }
+                    mainFragmentContainer.setLeft(0);
+
                     lastSelectedPosition = NO_POSITION_CACHED;
                 }
             }, getResources().getInteger(R.integer.sort_delaytime));

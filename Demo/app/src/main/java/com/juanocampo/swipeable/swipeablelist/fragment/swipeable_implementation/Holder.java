@@ -3,6 +3,7 @@ package com.juanocampo.swipeable.swipeablelist.fragment.swipeable_implementation
 import android.support.v4.app.Fragment;
 
 import com.juanocampo.swipeable.swipeablelist.swpeable.WrapperHolder;
+import com.juanocampo.swipeable.swipeablelist.swpeable.WrrapperViewPagerHolder;
 import com.juanocampo.swipeable.swipeablelist.swpeable.fragment.SwipeableFragment;
 
 /**
