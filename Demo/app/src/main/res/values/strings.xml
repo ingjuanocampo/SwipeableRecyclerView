@@ -6,16 +6,37 @@
         </array>
 
         <array name="dummy_items">
-            <item>One</item>
-            <item>Two</item>
-            <item>Three</item>
-            <item>Four</item>
-            <item>Five</item>
-            <item>Six</item>
-            <item>Seven</item>
-            <item>Eight</item>
-            <item>Nine</item>
-            <item>Ten</item>
+            <item>Number: 1</item>
+            <item>Number: 2</item>
+            <item>Number: 3</item>
+            <item>Number: 4</item>
+            <item>Number: 5</item>
+            <item>Number: 6</item>
+            <item>Number: 7</item>
+            <item>Number: 8</item>
+            <item>Number: 0</item>
+            <item>Number: 10</item>
+            <item>Number: 11</item>
+            <item>Number: 12</item>
+            <item>Number: 13</item>
+            <item>Number: 14</item>
+            <item>Number: 16</item>
+            <item>Number: 17</item>
+            <item>Number: 18</item>
+            <item>Number: 19</item>
+            <item>Number: 20</item>
+            <item>Number: 21</item>
+            <item>Number: 22</item>
+            <item>Number: 23</item>
+            <item>Number: 24</item>
+            <item>Number: 25</item>
+            <item>Number: 26</item>
+            <item>Number: 27</item>
+            <item>Number: 28</item>
+            <item>Number: 29</item>
+            <item>Number: 30</item>
+            <item>Number: 31</item>
+
         </array>
 
         <!-- TODO: Remove or change this placeholder text -->

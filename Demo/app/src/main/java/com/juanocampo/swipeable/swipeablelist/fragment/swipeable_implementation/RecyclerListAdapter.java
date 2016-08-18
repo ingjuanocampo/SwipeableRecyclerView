@@ -1,6 +1,7 @@
-package com.juanocampo.swipeable.swipeablelist;
+package com.juanocampo.swipeable.swipeablelist.fragment.swipeable_implementation;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,22 +9,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.juanocampo.swipeable.swipeablelist.swpeable_adapter.SwipeableHelperAdapter;
-import com.juanocampo.swipeable.swipeablelist.swpeable_adapter.SwipeableViewHolder;
+import com.juanocampo.swipeable.swipeablelist.R;
+import com.juanocampo.swipeable.swipeablelist.swpeable.adapter.SwipeableAdapter;
+import com.juanocampo.swipeable.swipeablelist.swpeable.viewholder.SwipeableViewHolder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * Simple RecyclerView.Adapter that implements {@link SwipeableHelperAdapter} to respond to move and
+ * Simple RecyclerView.Adapter that implements {@link SwipeableAdapter} to respond to move and
  * dismiss events from a {@link android.support.v7.widget.helper.ItemTouchHelper}.
  *
  * @author @juanocampo
  */
-public class RecyclerListAdapter extends SwipeableHelperAdapter {
-
-
+public class RecyclerListAdapter extends SwipeableAdapter {
 
     private static final int PAR = 1;
 
@@ -32,13 +32,20 @@ public class RecyclerListAdapter extends SwipeableHelperAdapter {
 
     private int IMPAR = 2;
 
-    public RecyclerListAdapter(Context context, SwipeAdapterActions listener, RecyclerView recyclerView) {
-        super(listener, recyclerView);
+    public RecyclerListAdapter(Context context, SwipeAdapterActions listener, RecyclerView recyclerView,LinearLayoutManager manager) {
+        super(listener, recyclerView, manager);
         mItems.addAll(Arrays.asList(context.getResources().getStringArray(R.array.dummy_items)));
     }
 
     @Override
-    public void onBindSwipeViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_main, parent, false);
+        RecyclerView.ViewHolder itemViewHolder = viewType == IMPAR ? new SwipeableItemViewHolder(parent) : new ItemViewHolder(view);
+        return itemViewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
 
         if (viewType == PAR) {
@@ -60,13 +67,6 @@ public class RecyclerListAdapter extends SwipeableHelperAdapter {
     @Override
     public int getItemCount() {
         return mItems.size();
-    }
-
-    @Override
-    protected RecyclerView.ViewHolder onCreateSwipeViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_main, parent, false);
-        RecyclerView.ViewHolder itemViewHolder = viewType == IMPAR ? new SwipeableItemViewHolder(parent) : new ItemViewHolder(view);
-        return itemViewHolder;
     }
 
     /**
