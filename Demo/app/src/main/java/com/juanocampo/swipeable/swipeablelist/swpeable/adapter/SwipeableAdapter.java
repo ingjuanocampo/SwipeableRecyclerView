@@ -63,7 +63,7 @@ public abstract class SwipeableAdapter extends RecyclerView.Adapter {
             SwipeableViewHolder swipeableViewHolder = (SwipeableViewHolder) viewHolder;
 
             Animation animation = AnimationUtils.loadAnimation(viewHolder.itemView.getContext(), R.anim.slide_back_swipeable_card);
-            swipeableViewHolder.swipeableMainContainer.startAnimation(animation);
+            swipeableViewHolder.getSwipeableMainContainer().startAnimation(animation);
         }
         callback.clearSwipedValues();
     }

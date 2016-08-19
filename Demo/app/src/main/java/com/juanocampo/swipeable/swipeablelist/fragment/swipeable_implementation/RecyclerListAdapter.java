@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -73,20 +74,32 @@ public class RecyclerListAdapter extends SwipeableAdapter {
      * Simple example of a view holder that implements {@link } and has a
      * "handle" view that initiates a drag event when touched.
      */
-    public static class SwipeableItemViewHolder extends SwipeableViewHolder {
+    public static class SwipeableItemViewHolder extends RecyclerView.ViewHolder implements SwipeableViewHolder {
 
         public final TextView textView;
         public final ImageView handleView;
 
-        public SwipeableItemViewHolder(ViewGroup viewGroup) {
-            super(viewGroup);
+        private final View swipeableViewLayout;
+        private final View swipeableMainContainer;
+
+        public SwipeableItemViewHolder(ViewGroup parent) {
+            super(LayoutInflater.from(parent.getContext()).inflate(R.layout.swipeable_item_indicator, parent, false));
+
+            swipeableViewLayout = itemView.findViewById(R.id.swipeable_layout);
+            swipeableMainContainer = itemView.findViewById(R.id.swipeable_parent_container);
+
+
+            FrameLayout parentContainer = (FrameLayout) itemView.findViewById(R.id.swipeable_container);
+            View swipeableViewIndicatorParent = LayoutInflater.from(itemView.getContext()).inflate(R.layout.item_main, parentContainer, false);
+            parentContainer.addView(swipeableViewIndicatorParent);
+
             textView = (TextView) itemView.findViewById(R.id.text);
             handleView = (ImageView) itemView.findViewById(R.id.handle);
         }
 
         @Override
-        protected int getViewHolderType() {
-            return R.layout.item_main;
+        public View getSwipeableMainContainer() {
+            return swipeableMainContainer;
         }
     }
 

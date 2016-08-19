@@ -60,9 +60,9 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
             if (isDxProportionalToTheLastState(viewHolder, (int) dX)) {
                 SwipeableViewHolder swipeableViewHolder = (SwipeableViewHolder) viewHolder;
                 currentDxTranslation = getSwipeXTranslation(dX);
-                swipeableViewHolder.swipeableMainContainer.setTranslationX(currentDxTranslation);
-                swipeableViewHolder.swipeableViewLayout.setBackgroundColor(swipeableViewHolder.itemView.getContext().getResources().getColor(android.R
-                        .color.white));
+                swipeableViewHolder.getSwipeableMainContainer().setTranslationX(currentDxTranslation);
+                //swipeableViewHolder.getSwipeableViewLayout().setBackgroundColor(viewHolder.itemView.getContext().getResources().getColor(android.R
+                //        .color.white));
                 viewHolderDxMap.put(viewHolder, (int) dX);
                 makeParallaxAnimation(dX, viewHolder);
             }
