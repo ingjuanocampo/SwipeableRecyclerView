@@ -61,6 +61,8 @@ public abstract class SwipeableAdapter extends RecyclerView.Adapter {
         final RecyclerView.ViewHolder viewHolder = recycler.findViewHolderForAdapterPosition(restorePosition);
         if (viewHolder != null && viewHolder instanceof SwipeableViewHolder) {
             SwipeableViewHolder swipeableViewHolder = (SwipeableViewHolder) viewHolder;
+            swipeableViewHolder.getSwipeableMainContainer().setTranslationX(0);
+            callback.restoreParrlaxAnimation(viewHolder);
 
             Animation animation = AnimationUtils.loadAnimation(viewHolder.itemView.getContext(), R.anim.slide_back_swipeable_card);
             swipeableViewHolder.getSwipeableMainContainer().startAnimation(animation);

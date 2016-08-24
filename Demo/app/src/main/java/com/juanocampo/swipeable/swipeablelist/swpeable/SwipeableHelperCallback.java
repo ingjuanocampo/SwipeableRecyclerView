@@ -66,19 +66,27 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
                 viewHolderDxMap.put(viewHolder, (int) dX);
                 makeParallaxAnimation(dX, viewHolder);
             }
-            Log.e("dx, dy", " "+ dX + " " + dY);
+            //Log.e("dx, dy", " "+ dX + " " + dY);
         }
     }
 
     private void makeParallaxAnimation(float dX, RecyclerView.ViewHolder viewHolderDragging) {
         if (dX < 0) {
-            for (int i = adapter.getManager().findFirstVisibleItemPosition() ; i < adapter.getManager().findLastVisibleItemPosition();  i ++) {
-                RecyclerView.ViewHolder viewHolderAnimate = adapter.getRecycler().findViewHolderForAdapterPosition(i);
-                if (viewHolderAnimate != null && viewHolderAnimate != viewHolderDragging) {
-                    viewHolderAnimate.itemView.setTranslationX(dX/10);
-                }
+            translateOtherVisiblesViewHolders(dX/10, viewHolderDragging);
+        }
+    }
+
+    private void translateOtherVisiblesViewHolders(float dX, RecyclerView.ViewHolder viewHolderDragging) {
+        for (int i = adapter.getManager().findFirstVisibleItemPosition() ; i < adapter.getManager().findLastVisibleItemPosition();  i ++) {
+            RecyclerView.ViewHolder viewHolderAnimate = adapter.getRecycler().findViewHolderForAdapterPosition(i);
+            if (viewHolderAnimate != null && viewHolderAnimate != viewHolderDragging) {
+                viewHolderAnimate.itemView.setTranslationX(dX);
             }
         }
+    }
+
+    public void restoreParrlaxAnimation(RecyclerView.ViewHolder viewHolderDragging) {
+        translateOtherVisiblesViewHolders(0, viewHolderDragging);
     }
 
 
