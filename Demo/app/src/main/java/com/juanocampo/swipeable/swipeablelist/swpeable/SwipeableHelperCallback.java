@@ -20,24 +20,20 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
 
     private final RecyclerView recycler;
     private boolean isSwiped;
-    private Map<RecyclerView.ViewHolder, Integer> viewHolderDxMap;
-    private float currentDxTranslation;
     private RecyclerView.ViewHolder lastSelectedViewHolder;
     private final SwipeableAdapter adapter;
     private boolean isDragInLeftDirection;
 
-
-
     public SwipeableHelperCallback(SwipeableAdapter adapter, RecyclerView recyclerView) {
         this.adapter = adapter;
-        this.viewHolderDxMap = new HashMap<>();
         this.recycler = recyclerView;
     }
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-            return makeMovementFlags(ItemTouchHelper.LEFT, ItemTouchHelper.LEFT);
+        return makeMovementFlags(ItemTouchHelper.LEFT, ItemTouchHelper.LEFT);
     }
+
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
         return false;
@@ -45,28 +41,16 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
-        if (!isSwiped && viewHolder instanceof SwipeableViewHolder && isDragInLeftDirection) {
-            isSwiped = true;
-            adapter.onItemDismiss(lastSelectedViewHolder.getAdapterPosition());
-
-        }
+        //no-op
     }
 
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         this.isDragInLeftDirection = dX < 0;
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE && viewHolder instanceof SwipeableViewHolder && isDragInLeftDirection) {
-            if (isDxProportionalToTheLastState(viewHolder, (int) dX)) {
-                SwipeableViewHolder swipeableViewHolder = (SwipeableViewHolder) viewHolder;
-                currentDxTranslation = getSwipeXTranslation(dX);
-                swipeableViewHolder.getSwipeableMainContainer().setTranslationX(currentDxTranslation);
-                //swipeableViewHolder.getSwipeableViewLayout().setBackgroundColor(viewHolder.itemView.getContext().getResources().getColor(android.R
-                //        .color.white));
-                viewHolderDxMap.put(viewHolder, (int) dX);
-                makeParallaxAnimation(dX, viewHolder);
-            }
-            //Log.e("dx, dy", " "+ dX + " " + dY);
+            SwipeableViewHolder swipeableViewHolder = (SwipeableViewHolder) viewHolder;
+            swipeableViewHolder.getSwipeableMainContainer().setTranslationX(getSwipeXTranslation(dX));
+            makeParallaxAnimation(dX, viewHolder);
         }
     }
 
@@ -77,10 +61,23 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
     }
 
     private void translateOtherVisiblesViewHolders(float dX, RecyclerView.ViewHolder viewHolderDragging) {
-        for (int i = adapter.getManager().findFirstVisibleItemPosition() ; i < adapter.getManager().findLastVisibleItemPosition();  i ++) {
+        for (int i = adapter.getManager().findFirstVisibleItemPosition() ; i <= adapter.getManager().findLastVisibleItemPosition();  i ++) {
             RecyclerView.ViewHolder viewHolderAnimate = adapter.getRecycler().findViewHolderForAdapterPosition(i);
             if (viewHolderAnimate != null && viewHolderAnimate != viewHolderDragging) {
                 viewHolderAnimate.itemView.setTranslationX(dX);
+            }
+        }
+    }
+
+    private void restoreViewHolders() {
+        for (int i = 0 ; i <= adapter.getManager().getItemCount();  i ++) {
+            RecyclerView.ViewHolder viewHolderAnimate = adapter.getRecycler().findViewHolderForAdapterPosition(i);
+            if (viewHolderAnimate != null) {
+                viewHolderAnimate.itemView.setTranslationX(0);
+                if (viewHolderAnimate instanceof SwipeableViewHolder) {
+                    SwipeableViewHolder swipeableViewHolder = (SwipeableViewHolder) viewHolderAnimate;
+                    swipeableViewHolder.getSwipeableMainContainer().setTranslationX(0);
+                }
             }
         }
     }
@@ -89,19 +86,20 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
         translateOtherVisiblesViewHolders(0, viewHolderDragging);
     }
 
-
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         // We only want the active item to change
         if (actionState == ItemTouchHelper.ACTION_STATE_IDLE && isDragInLeftDirection) {
             if (lastSelectedViewHolder instanceof SwipeableViewHolder && !isSwiped) {
                 // Let the view holder know that this item is being moved or dragged
+
+                adapter.notifyItemChanged(lastSelectedViewHolder.getAdapterPosition());
+                restoreViewHolders();
                 isSwiped = true;
                 adapter.onItemDismiss(lastSelectedViewHolder.getAdapterPosition());
             }
         }
         this.lastSelectedViewHolder = viewHolder;
-        Log.w("onSelected", "actionState " + actionState);
 
         super.onSelectedChanged(viewHolder, actionState);
     }
@@ -110,13 +108,7 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
         return dX < 0 ? dX/5 : 0;
     }
 
-    private boolean isDxProportionalToTheLastState(RecyclerView.ViewHolder lastViewHolder, int newDx) {
-        return viewHolderDxMap.containsKey(lastViewHolder) ? Math.abs(viewHolderDxMap.get(lastViewHolder) - newDx) < 350 : true;
-    }
-
     public void clearSwipedValues() {
         this.isSwiped = false;
-        this.viewHolderDxMap = new HashMap<>();
-        this.currentDxTranslation = 0;
     }
 }
