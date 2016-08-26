@@ -38,6 +38,15 @@ public abstract class SwipeableAdapter extends RecyclerView.Adapter {
         mItemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+        if (holder instanceof SwipeableViewHolder) {
+            SwipeableViewHolder swipeableViewHolder = (SwipeableViewHolder) holder;
+            swipeableViewHolder.getSwipeableMainContainer().setTranslationX(0);
+        }
+    }
+
     /**
      * Called when an item has been dismissed by a swipe.<br/>
      * <br/>
