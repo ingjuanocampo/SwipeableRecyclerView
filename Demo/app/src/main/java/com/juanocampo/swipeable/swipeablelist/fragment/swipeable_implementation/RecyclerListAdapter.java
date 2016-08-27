@@ -99,7 +99,7 @@ public class RecyclerListAdapter extends SwipeableAdapter {
 
         @Override
         public View getSwipeableMainContainer() {
-            return swipeableMainContainer;
+            return itemView;
         }
     }
 

@@ -30,12 +30,21 @@ public abstract class SwipeableAdapter extends RecyclerView.Adapter {
     private final RecyclerView recycler;
 
     public SwipeableAdapter(SwipeAdapterActions listener, RecyclerView recyclerView, LinearLayoutManager manager) {
-        callback = new SwipeableHelperCallback(this, recyclerView);
         this.recycler = recyclerView;
         this.listener = listener;
         this.manager = manager;
+        callback = new SwipeableHelperCallback(this, recyclerView);
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+        if (holder instanceof SwipeableViewHolder) {
+            SwipeableViewHolder swipeableViewHolder = (SwipeableViewHolder) holder;
+            swipeableViewHolder.getSwipeableMainContainer().setTranslationX(0);
+        }
     }
 
     /**
@@ -50,7 +59,6 @@ public abstract class SwipeableAdapter extends RecyclerView.Adapter {
      * @see RecyclerView.ViewHolder#getAdapterPosition()
      */
     public void onItemDismiss(int position) {
-        //int visiblePositionSelected = position - manager.findFirstVisibleItemPosition();
         if (listener != null) {
             listener.swiped(position);
         }
