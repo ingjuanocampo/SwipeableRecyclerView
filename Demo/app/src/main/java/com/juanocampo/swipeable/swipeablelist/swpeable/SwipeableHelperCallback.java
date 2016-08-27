@@ -22,7 +22,7 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
     private boolean isSwiped;
     private RecyclerView.ViewHolder lastSelectedViewHolder;
     private final SwipeableAdapter adapter;
-    private boolean isDragInLeftDirection;
+    //private boolean isDragInLeftDirection;
 
     public SwipeableHelperCallback(SwipeableAdapter adapter, RecyclerView recyclerView) {
         this.adapter = adapter;
@@ -46,8 +46,8 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        this.isDragInLeftDirection = dX < 0;
-        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE && viewHolder instanceof SwipeableViewHolder && isDragInLeftDirection) {
+        //this.isDragInLeftDirection = dX < 0;
+        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE && viewHolder instanceof SwipeableViewHolder /*&& isDragInLeftDirection*/) {
             SwipeableViewHolder swipeableViewHolder = (SwipeableViewHolder) viewHolder;
             swipeableViewHolder.getSwipeableMainContainer().setTranslationX(getSwipeXTranslation(dX));
             makeParallaxAnimation(dX, viewHolder);
@@ -89,7 +89,7 @@ public class SwipeableHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         // We only want the active item to change
-        if (actionState == ItemTouchHelper.ACTION_STATE_IDLE && isDragInLeftDirection) {
+        if (actionState == ItemTouchHelper.ACTION_STATE_IDLE /*&& isDragInLeftDirection*/) {
             if (lastSelectedViewHolder instanceof SwipeableViewHolder && !isSwiped) {
                 // Let the view holder know that this item is being moved or dragged
 
